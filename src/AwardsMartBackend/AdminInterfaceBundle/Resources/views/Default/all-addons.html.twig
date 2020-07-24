@@ -1,0 +1,107 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block main_body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Addons <small>View and manage all your addons</small></h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well well-sm">
+                        <div class="btn-group">
+                            <a href="{{ path('update.create.addon') }}" class="btn btn-sm btn-info"><i class="fa fa-plus"></i> Add New Addon</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table jambo_table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Addon ID</th>
+                            <th>Addon Name</th>
+                            <th>Addon Options</th>
+                            <th>Addon Is Active?</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for addon in addons %}
+                                <tr>
+                                    <td>{{ addon.id }}</td>
+                                    <td>{{ addon.name }}</td>
+                                    <td>
+                                        <select class="form-control">
+                                            {% for opt in addon.options %}
+                                                {% if opt.IsActive == 1 %}
+                                                    <option>{{ opt.name }} (+${{ opt.price|number_format(2,".",",")|default('0.0') }})</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label class="badge badge-info">
+                                            {% if addon.IsActive == 1 %}YES{% else %}NO{% endif %}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a href="#" class="dropdown-toggle btn btn-warning" data-toggle="dropdown">Actions <b class="caret"></b></a>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <!--<li>
+                                                    <a href="#">View</a>
+                                                </li>!-->
+                                                <li>
+                                                    <a href="{{ path('update.existing.addon', {addon_id:addon.id}) }}">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="trigger-addon-delete" href="{{ path('deactivate.existing.addon', {addon_id:addon.id}) }}">Deactivate</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+
+            {% if total > 0 %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group">
+                            {% for i in 1..pages %}
+                                {% set class='btn-default' %}
+                                {% if curr == i %}{% set class = 'btn-info' %}{% endif %}
+                                <a href="{{ path('addons.paged.view', {page:i}) }}" class="btn btn-sm {{ class }}">{{ i }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".trigger-addon-delete").click(function(e){
+                e.preventDefault();
+                if( confirm("Are you sure you want to deactivate this addon?") ){
+                    window.location.href = $(this).attr("href");
+                }
+            });
+        });
+    </script>
+{% endblock %}

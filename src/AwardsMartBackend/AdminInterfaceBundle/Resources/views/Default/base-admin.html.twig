@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>AwardsMart Administrator | {% block page_title %}Dashboard{% endblock %}</title>
+
+    {% include '@AdminInterface/Default/widgets/header-javascript.html.twig' %}
+
+    {% block stylesheets %}{% endblock %}
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            {% include '@AdminInterface/Default/widgets/main-menu.html.twig' %}
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+           {% include '@AdminInterface/Default/widgets/menu.html.twig' %}
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+            {% include '@AdminInterface/Default/widgets/alert.html.twig' %}
+            {% block main_body %}{% endblock %}
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+            <div class="pull-right">
+                AwardsMart | Administrative Interface
+            </div>
+            <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+    </div>
+</div>
+
+{% include '@AdminInterface/Default/widgets/footer-javascript.html.twig' %}
+
+{% block javascript %}{% endblock %}
+
+</body>
+</html>

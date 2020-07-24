@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="no-js">
+
+    <head>
+
+        <meta charset="utf-8">
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title>{% block title %}AwardsMart | Celebrating life's victories. San Antonio's premier Awards shop.{% endblock %}</title>
+
+        <meta name="description" content="{% block meta_description %}Offer a selection of presentation cups, awards and acrylic trophies.{% endblock %}">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+        <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+        <link rel="stylesheet" href="{{ asset('bundles/assets/css/reset.css') }}">
+
+        <link rel="stylesheet" href="{{ asset('bundles/assets/css/main.css') }}">
+
+        <link rel="stylesheet" href="{{ asset('bundles/assets/css/responsive.css') }}">
+
+        <link rel="stylesheet" href="{{ asset('bundles/assets/css/awardscart.css') }}">
+
+        <link rel="stylesheet" href="{{ asset('bundles/assets/js/slippry/slippry.css') }}">
+
+        <link rel="stylesheet" href="{{ asset('bundles/assets/js/slick/slick.css') }}">
+
+        <link rel="stylesheet" href="{{ asset('bundles/assets/js/slick/slick-theme.css') }}">
+
+        <link href='https://fonts.googleapis.com/css?family=Raleway:800,200' rel='stylesheet' type='text/css'>
+
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
+
+        <link href="{{ asset('bundles/assets/admin/vendors/featherlight/release/featherlight.min.css') }}" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+        <script src="{{ asset('bundles/assets/js/slippry/slippry.min.js') }}"></script>
+
+        <script src="{{ asset('bundles/assets/js/slick/slick.min.js') }}"></script>
+
+        <script src="{{ asset('bundles/assets/js/sticker.js') }}"></script>
+
+        <script src="{{ asset('bundles/assets/js/fixed-header.js') }}"></script>
+
+        <script src="{{ asset('bundles/assets/admin/vendors/featherlight/release/featherlight.min.js') }}"></script>
+
+        <script>
+
+            $(document).ready(function(){
+
+                $("#header").stick_in_parent();
+
+            });
+
+        </script>
+
+        <!--<script src="https://use.typekit.net/wgp4uio.js"></script>
+
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>!-->
+        <style>
+            .alert-center{
+                width:100%;
+                position: relative;
+                top:-15px;
+                cursor: pointer;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <div id="header">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-md-3">
+
+                        <a href="{{ path("my_homepage") }}"><img src="{{ asset('bundles/assets/images/logo.jpg') }}" /></a>
+
+                        <div id="secret-menu">
+                            <div class="trigger"><img width="30" src="{{ asset('bundles/assets/images/hamburger.png') }}" /></div>
+                            <div class="sm-search">
+                                <a href=""><img src="{{ asset('bundles/assets/images/search.png') }}" /></a>
+                            </div>
+                            <div class="sm-cart">
+                                <a href=""><img src="{{ asset('bundles/assets/images/cart-icon.png') }}" /></a>
+                            </div>
+                            <div class="sm-content">
+                                <ul></ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-9">
+                        {% include '@Core/widgets/top-menu.html.twig' %}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="main-menu-container">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-md-10">
+                        {% include '@Core/widgets/main-menu.html.twig' %}
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <div id="menu-search">
+
+                            <a href="javascript:void(0);">
+
+                                <img src="{{ asset('bundles/assets/images/search-icon.png') }}" />
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12">
+
+                        <form action="{{ path('main_search_container') }}" method="GET">
+
+                            <input name="f" id="product-search" placeholder="Find by product number..." type="text" class="form-control" />
+
+                            <input name="executed-search" value="1" type="hidden" />
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="main-content">
+            <div class="container">
+
+                {% include '@Core/widgets/alerts.html.twig' %}
+
+                {% block main_container %}{% endblock %}
+
+            </div>
+        </div>
+
+        <div id="footer" class="container">
+
+            <div id="footer-images">
+
+                <img src="{{ asset('bundles/assets/images/footer-logo.jpg') }}" />
+
+            </div>
+
+                <span class="copyright">
+
+                    Copyright &copy; 2016-2021 AwardsMart. All Rights Reserved.
+
+                </span>
+
+        </div>
+
+        <!-- JS INCLUDES !-->
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <!-- Some basic JS stuff !-->
+
+    <script>
+
+        jQuery(document).ready(function(e){
+
+            jQuery("#menu-search a").click(function(e){
+
+                jQuery("#product-search").toggle();
+
+            });
+
+            jQuery("#secret-menu .trigger").click(function(e){
+
+                jQuery("#secret-menu .sm-content").toggle();
+
+            });
+
+        });
+
+    </script>
+
+        <link rel='stylesheet' id='alertify-styles-css'  href='{{ asset('bundles/assets/js/plugins/third-party/alertify/css/alertify.min.css') }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='alertify-theme-styles-css'  href='{{ asset('bundles/assets/js/plugins/third-party/alertify/css/themes/default.min.css') }}' type='text/css' media='all' />
+        <link rel='stylesheet' id='jranger-theme-styles-css'  href='{{ asset('bundles/assets/js/plugins/third-party/jquery.range.css') }}' type='text/css' media='all' />
+        <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js?ver=4.5.3'></script>
+        <script type='text/javascript' src='{{ asset('bundles/assets/js/plugins/third-party/alertify.min.js') }}'></script>
+        <script type='text/javascript' src='{{ asset('bundles/assets/js/plugins/third-party/jquery.range-min.js') }}'></script>
+        <script type='text/javascript' src='{{ asset('bundles/assets/js/plugins/third-party/masonry.js') }}'></script>
+        <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.0/imagesloaded.min.js?ver=4.5.3'></script>
+
+    {% block javascript %}{% endblock %}
+
+        <div id="main-loading-gif">
+            <img src="{{ asset('bundles/assets/images/spinner.gif') }}" />
+        </div>
+
+    </body>
+</html>

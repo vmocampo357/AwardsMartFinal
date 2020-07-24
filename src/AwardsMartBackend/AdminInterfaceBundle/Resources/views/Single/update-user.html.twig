@@ -1,0 +1,95 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block stylesheets %}
+
+{% endblock %}
+{% block main_body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Users <small>{{ title }}</small></h3>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-default" href="{{ path('users.all') }}">Back to all users</a>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+    <form action="" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Username</h4>
+                        <input name="userform[username]" type="text" class="form-control" value="{{ user.username }}" />
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Password</h4>
+                        <input name="userform[password]" type="password" class="form-control" value="" />
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>First Name</h4>
+                        <input name="userform[firstName]" type="text" class="form-control" value="{{ user.firstName }}" />
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Last Name</h4>
+                        <input name="userform[lastName]" type="text" class="form-control" value="{{ user.lastName }}" />
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Permissions</h4>
+                        <label class="control-label">
+                            <input name="userform[is_super_admin]" {% if user.hasRole('ROLE_SUPER_ADMIN') %}checked="checked"{% endif %}
+                                   type="checkbox" value="1" />
+                                        &nbsp; <span>Can edit all items (including users)</span>
+                        </label><br />
+                        <label class="control-label">
+                            <input name="userform[roles][]" {% if user.hasRole('ROLE_PRODUCTS') %}checked="checked"{% endif %}
+                                   type="checkbox" value="ROLE_PRODUCTS" />
+                                        &nbsp; <span>Can edit products</span>
+                        </label><br />
+                        <label class="control-label">
+                            <input name="userform[roles][]" {% if user.hasRole('ROLE_CATEGORIES') %}checked="checked"{% endif %}
+                                   type="checkbox" value="ROLE_CATEGORIES" />
+                                        &nbsp; <span>Can edit categories</span>
+                        </label><br />
+                        <label class="control-label">
+                            <input name="userform[roles][]" {% if user.hasRole('ROLE_ORDERS') %}checked="checked"{% endif %}
+                                   type="checkbox" value="ROLE_ORDERS" />
+                                        &nbsp; <span>Can edit orders</span>
+                        </label><br />
+                        <label class="control-label">
+                            <input name="userform[roles][]" {% if user.hasRole('ROLE_PAGES') %}checked="checked"{% endif %}
+                                   type="checkbox" value="ROLE_PAGES" />
+                                        &nbsp; <span>Can edit pages</span>
+                        </label><br />
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group">
+                            <button class="btn btn-default" type="submit">Save User Information</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input name="userform[id]" type="hidden" value="{{ id }}" />
+    </form>
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function(e){
+
+        });
+    </script>
+{% endblock %}

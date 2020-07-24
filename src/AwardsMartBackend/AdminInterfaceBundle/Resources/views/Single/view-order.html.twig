@@ -1,0 +1,166 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block main_body %}
+    {#{{ dump(app.request.request) }}#}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Orders <small>Reviewing order ({{ order.purchaseOrderNumber }})</small></h3>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Customer Information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><th>Full Name</th><td>{{ order.customer.name }}</td></tr>
+                    <tr><th>Callback Phone</th><td>{{ order.customer.phone }}</td></tr>
+                    <tr><th>Callback Time</th><td>{{ order.customer.callbackTime }}</td></tr>
+                    <tr><th>Email</th><td>{{ order.customer.email }}</td></tr>
+                    <tr><th>Event Date</th><td>{{ order.customer.eventDate }}</td></tr>
+                    <tr><th>Event Time</th><td>{{ order.customer.time }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th colspan="2">Shipping Address</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><th>First Name</th><td>{{ order.customer.shippingAddress.firstName }}</td></tr>
+                <tr><th>Last Name</th><td>{{ order.customer.shippingAddress.lastName }}</td></tr>
+                <tr><th>Address</th><td>{{ order.customer.shippingAddress.address }}</td></tr>
+                <tr><th>City</th><td>{{ order.customer.shippingAddress.city }}</td></tr>
+                <tr><th>State</th><td>{{ order.customer.shippingAddress.state }}</td></tr>
+                <tr><th>Zipcode</th><td>{{ order.customer.shippingAddress.zipCode }}</td></tr>
+                <tr><th>Phone (1)</th><td>{{ order.customer.shippingAddress.phone }}</td></tr>
+                <tr><th>Phone (alt)</th><td>{{ order.customer.shippingAddress.phoneAlt }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th colspan="2">Billing Address</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><th>First Name</th><td>{{ order.customer.billingAddress.firstName }}</td></tr>
+                <tr><th>Last Name</th><td>{{ order.customer.billingAddress.lastName }}</td></tr>
+                <tr><th>Address</th><td>{{ order.customer.billingAddress.address }}</td></tr>
+                <tr><th>City</th><td>{{ order.customer.billingAddress.city }}</td></tr>
+                <tr><th>State</th><td>{{ order.customer.billingAddress.state }}</td></tr>
+                <tr><th>Zipcode</th><td>{{ order.customer.billingAddress.zipCode }}</td></tr>
+                <tr><th>Phone (1)</th><td>{{ order.customer.billingAddress.phone }}</td></tr>
+                <tr><th>Phone (alt)</th><td>{{ order.customer.billingAddress.phoneAlt }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Purchase Order</h2>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Num</th><th>Product Name</th><th>Qty</th>
+                        <th>Size</th><th>Option</th><th>Add-ons</th><th>Files</th><th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set cart = order.cart %}
+                    {% for item in cart.cartItems %}
+                        <tr>
+                            <td>{{ item.product.sku }}</td>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.size.size }} {{ item.size.units }}</td>
+                            <td>{{ item.option.name|default('None selected') }}</td>
+                            <td>
+                                {% if item.addonOptions|length > 0 %}
+                                    {% for addon in item.addonOptions %}
+                                        {{ addon.name }} (+ ${{ addon.price|number_format(2,".",",") }})<br />
+                                    {% endfor %}
+                                {% else %}
+                                    None selected
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.engraving %}
+                                    <div style="display: none;"><div id="engraving-item-{{ item.id }}">{{ item.engraving }}</div></div>
+                                {% endif %}
+                                <div class="dropdown">
+                                    <a href="#" class="dropdown-toggle btn-sm btn btn-warning" data-toggle="dropdown">See Files <b class="caret"></b></a>
+                                    {% if item.uploads|length > 0 %}
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        {% if item.LogoUpload %}<li><a data-featherlight="" target="_blank" href="{{ asset(item.LogoUpload.source) }}">Logo</a></li>{% endif %}
+                                        {% if item.NamesUpload %}<li><a data-featherlight="" target="_blank" href="{{ asset(item.NamesUpload.source) }}">Names</a></li>{% endif %}
+                                        {% if item.OtherUpload %}<li><a data-featherlight="" target="_blank" href="{{ asset(item.OtherUpload.source) }}">Other</a></li>{% endif %}
+                                        {% if item.engraving %}<li><a data-featherlight="" target="_blank" href="#engraving-item-{{ item.id }}">Text Engraving</a></li>{% endif %}
+                                    </ul>
+                                    {% else %}
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="javascript:void(0);">No files uploaded</a></li>
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>${{ item.subtotal|number_format(2,".",",") }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-push-6">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th colspan="2"><h3>Fees</h3></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="table">
+                                {% if cart.fees|length > 0 %}
+                                    <tr><th>Fee Name</th><th>Fee Cost</th></tr>
+                                    {% for fee in cart.fees %}
+                                        <tr>
+                                            <td>{{ fee.name }}</td>
+                                            <td>${{ fee.cost|number_format(2,".",",") }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><th><h3>No fees</h3></th></tr>
+                                {% endif %}
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><th><h3>Final Total</h3></th><td><h3>${{ cart.total|number_format(2,".",",") }}</h3></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}{% endblock %}

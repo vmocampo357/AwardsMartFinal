@@ -1,0 +1,11 @@
+frontend:
+    resource: "@PrimarySiteBundle/Controller/"
+    type:     annotation
+
+frontend_provider:
+    resource: "@FrontProviderBundle/Controller/"
+    type:     annotation
+
+backend_interface:
+    resource: "@AdminInterfaceBundle/Controller"
+    type: annotation

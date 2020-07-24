@@ -1,0 +1,15 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+    app.cart_provider:
+        class: AwardsMartBackend\CustomerBundle\Services\CartServiceProvider
+        arguments: ["@session","@doctrine.orm.entity_manager"]
+    app.cart_mailer:
+        class: AwardsMartBackend\CustomerBundle\Services\CartMailerService
+        arguments: ["@mailer","@twig"]
+    app.cart_uploader:
+        class: AwardsMartBackend\CustomerBundle\Services\CartUploaderService
+        arguments: ["%uploads_dir%","%uploads_web_path%","@request_stack"]

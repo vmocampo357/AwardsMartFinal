@@ -1,0 +1,17 @@
+#bugs{
+	height:100px;
+	width:100%;
+	position:fixed;
+	top:0px;
+	z-index: 999;
+	left:0px;
+	background-color:black;
+	overflow-y:scroll;
+	display:none;
+}
+	#bugs li{
+		color:green;
+		padding:2px 5px;
+		font-size:10px;
+		margin-bottom:1px;
+	}

@@ -1,0 +1,167 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+        .disabled-category{
+            display: none;
+        }
+        .disabled-category label a.category-name{
+            text-decoration: line-through;
+        }
+        .disabled-category .action-bronson{
+            display:none;
+        }
+        .close-group{ display: none; }
+        .remove-category{ display: block; }
+        .has-children .close-group{
+            display: inline-block;
+            font-size:14px;
+            color:black;
+        }
+        /*.has-children .remove-category{
+            display: none;
+        }*/
+        .categories{
+            padding-left:0px;
+        }
+        .categories, .categories li
+        {
+            list-style-type:none;
+        }
+            .categories label:hover{
+                background-color:rgba(0,0,0,0.07);
+            }
+            .children:hover{
+                box-shadow:-3px 0px 0px 0px skyblue !important;
+            }
+            .categories .children{
+                box-shadow:-3px 0px 0px 0px #5A738E;
+                margin-left:32px;
+                padding-left:0px;
+            }
+                .categories li label a{
+                    font-size:20px;
+                }
+                    .categories li label .btn{
+                        font-size:10px !important;
+                    }
+                .categories li label{
+                    display:block;
+                    box-shadow:inset 0px 0px 2px 0px darkgray;
+                    padding:10px;
+                    padding-left:20px;
+                    position: relative;
+                }
+                    .categories .children li label{
+                        padding-left:0px;
+                    }
+                .categories .children li label a{
+                    font-size:14px;
+                }
+                .children .category-name:before{
+                    content: '——';
+                }
+        .action-bronson{
+            position: absolute;
+            top:5px;
+            right:5px;
+        }
+    </style>
+{% endblock %}
+
+{% macro recursiveCategory(category) %}
+    <li class="{% if category.IsActive == 0 %}disabled-category{% endif %}">
+        <label class="
+            {% if category.ChildrenCategories|length > 0 %}has-children{% endif %}
+            {% if category.parent == false %}is-root{% endif %}">
+            <a class="category-name" href="#">
+                {{ category.name }}
+                <a data-for="{{ category.id }}" class="close-group" href="javascript:void(0);">
+                    (<i class="fa fa-bars"></i>)
+                </a>
+            </a>
+            <div class="action-bronson">
+                <div class="btn-group">
+                    {% if category.ChildrenCategories is empty %}
+                        <a data-toggle="tooltip" title="Re-order Products" class="btn btn-sm btn-default" href="{{ path('categories.products.order',{category_id:category.id}) }}">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    {% endif %}
+                    <a data-toggle="tooltip" title="Edit Category" class="btn btn-sm btn-info edit-category" href="{{ path('update.existing.category',{category_id:category.id}) }}">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a data-toggle="tooltip" title="Add Child Category" class="btn btn-sm btn-success add-child-category" href="{{ path('update.create.category.parent',{parent_id:category.id, class_id:category.type}) }}">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <a data-toggle="tooltip" title="Remove Category" class="btn btn-sm btn-danger remove-category" href="{{ path('deactivate.existing.category', {category_id:category.id}) }}">
+                        <i class="fa fa-minus-circle"></i>
+                    </a>
+                </div>
+            </div>
+        </label>
+        {% if category.ChildrenCategories|length %}
+            <ul data-parent="{{ category.id }}" class="children">
+                {% for child in category.ChildrenCategories %}
+                    {{ _self.recursiveCategory(child) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+{% block main_body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Categories <small>View and review your cart's categories</small></h3>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Products</h3>
+            <a class="btn btn-sm btn-success" href="{{ path('update.create.category.parent', {class_id:1, parent_id:0}) }}"><i class="fa fa-plus"></i> Add Product Category</a>
+            <ul class="categories">
+                {% for product in products %}
+                    {{ _self.recursiveCategory(product) }}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3>Themes</h3>
+            <a class="btn btn-sm btn-success" href="{{ path('update.create.category.parent', {class_id:2, parent_id:0}) }}"><i class="fa fa-plus"></i> Add Theme Category</a>
+            <ul class="categories">
+                {% for theme in themes %}
+                    {{ _self.recursiveCategory(theme) }}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function(e){
+
+           // Code for intercepting deletes
+           $(document).on("click",".remove-category",function(e){
+                e.preventDefault();
+                var href = $(this).attr("href");
+                if( confirm("Are you sure you want to deactivate this category?") ){
+                    window.location.href = href;
+                }
+           });
+
+           // Code for toggling the sub-categories
+           $(document).on("click",".close-group",function(){
+               var parent_id = $(this).attr("data-for");
+               $(".children[data-parent=" + parent_id + "]").slideToggle();
+           });
+        });
+    </script>
+{% endblock %}

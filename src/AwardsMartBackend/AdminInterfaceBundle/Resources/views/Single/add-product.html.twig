@@ -1,0 +1,307 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .product-selections li, .product-selections{
+            list-style-type:none;
+        }
+        .product-selections{
+            padding:0px;
+            margin:5px 0px;
+        }
+        .product-selections li{
+            position:relative;
+            margin-bottom:5px;
+        }
+        .product-selections .controls{
+            position: absolute;
+            right:0px;
+            top:0px;
+        }
+        .hidden-template{
+            display: none;
+        }
+        #product-sizes-list{
+            padding-top:10px;
+        }
+        .size-input-list-item{
+            clear:both;
+            position:relative !important;
+            margin-bottom:15px !important;
+        }
+            .size-input-list-item ul{
+                padding:20px;
+                background-color:rgba(0,0,0,0.1);
+            }
+            .size-input-group{
+                padding-bottom:15px;
+                box-shadow:inset 0px -1px 0px 0px rgba(0,0,0,.2);
+            }
+            .size-input-group:after{
+                content: "";
+                display: table;
+                clear: both;
+            }
+            .size-input-group label{
+                float:left;
+                padding:5px 0px;
+                width:5%;
+            }
+            .size-input-group .size-input{
+                float:left;
+                width:40%;
+                margin-right:20px;
+            }
+            .size-input-group .size-units{
+                float:left;
+                width:20%;
+            }
+            .price-selection-list-item:after{
+                content: "";
+                display: table;
+                clear: both;
+            }
+            .price-selection-list-item{
+                position: relative;
+                padding:10px 0px;
+                box-shadow:inset 0px -1px 0px 0px rgba(0,0,0,0.09), inset 0px 1px 0px 0px rgba(0,0,0,0.09);
+            }
+                .price-selection-list-item .controls{
+                    top:15px;
+                    right:15px;
+                }
+                .price-selection-list-item:hover{
+                    background-color:rgba(0,0,0,.1);
+                }
+                .price-selection-list-item .size-price-input,
+                .price-selection-list-item label{
+                    float:left;
+                    width:5%;
+                }
+                .price-selection-list-item label{
+                    text-align: center;
+                    padding:6px 0px;
+                }
+                .price-price-input{
+                    width:30% !important;
+                }
+                .min-price-input, .max-price-input{
+                    width:10% !important;
+                }
+                .max-price-input, .price-right{
+                    margin-right:20px;
+                }
+    </style>
+{% endblock %}
+{% block main_body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Products <small>{{ title }}</small></h3>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-default" href="{{ path('products_all_view') }}">Back to all products</a>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+    <form action="" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Product Name</h4>
+                        <input required name="product[name]" type="text" class="form-control" value="{{ product.name }}" />
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Product Number</h4>
+                        <input required name="product[sku]" type="text" class="form-control" value="{{ product.sku }}" />
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Browser Title</h4>
+                        <input name="product[metatitle]" type="text" class="form-control" value="{{ product.metaTitle }}"/>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Browser Description</h4>
+                        <textarea name="product[metadesc]" style="height:100px;" class="form-control">{{ product.metaDescription }}</textarea>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Page Description</h4>
+                        <textarea name="product[desc]" contenteditable="true" id="product-description" style="overflow:scroll; min-height:500px;" class="editor-wrapper form-control">{{ product.description }}</textarea>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        {% include '@AdminInterface/Single/widgets/product-addons.html.twig' %}
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        {% include '@AdminInterface/Single/widgets/product-options.html.twig' %}
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        {% include '@AdminInterface/Single/widgets/product-categories.html.twig' %}
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        {% include '@AdminInterface/Single/widgets/product-fees.html.twig' %}
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        {% include '@AdminInterface/Single/widgets/product-sizes.html.twig' %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Thumbnail Image</h4>
+                        <div class="well">
+                            <img width="40%" src="{{ asset(product.primaryImage) }}" />
+                            <input type="file" name="thumbnail" />
+                        </div>
+                        <h4>Main Image</h4>
+                        <div class="well">
+                            <img width="50%" src="{{ asset(product.pageImage) }}" />
+                            <input type="file" name="primary" />
+                        </div>
+                        <h4>Zoom Image</h4>
+                        <div class="well">
+                            <img width="100%" src="{{ asset(product.zoomImage) }}" />
+                            <input type="file" name="zoom" />
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-11 col-md-push-1">
+                        <label>Product Status</label>
+                        <select name="product[active]" class="form-control">
+                            <option value="0">Inactive</option>
+                            <option {% if product.isActive == 1 %}selected{% endif %} value="1">Active</option>
+                        </select>
+                        <br />
+                        <label>Sort Order</label>
+                        <input class="form-control" type="number" />
+                        <br />
+                        <button class="btn btn-success" type="submit">Finish and Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% include '@AdminInterface/Single/widgets/templates.html.twig' %}
+{% endblock %}
+{% block javascript %}
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=tlw2ypxglv76saqrvipf8krx8bkedeo4ojm5fd7liz9ih6lv"></script>
+    <script>tinymce.init({
+            selector:'#product-description',
+            theme: 'modern',
+            plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+                'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                'save table contextmenu directionality emoticons template paste textcolor']
+    });</script>
+    <script type="text/javascript">
+        $(document).ready(function(e){
+
+            window.incrementingSizes = 0;
+            window.incrementingPrices = 0;
+            window.incrementingFees = 0;
+
+            // Autocomplete
+            function setAutocomplete(){
+                $(".option-select").off().autocomplete({
+                    lookup:{{ productOptions|raw }},
+                    onSelect:function(){}
+                });
+                $(".size-units").off().autocomplete({
+                    lookup:{{ labelsOptions|raw }},
+                    onSelect:function(){}
+                });
+            }
+
+            // Duplicating addons
+            $(document).on("click",".trigger-add-addon",function(e){
+                var html_template = $("#new-addon-template").html();
+                $("#product-addons-list").append($(html_template));
+            });
+
+            // Removing addons
+            $(document).on("click",".remove-this-addon, .remove-this-fee, .remove-this-price, .remove-this-option, .remove-this-category",function(e){
+                $(this).parent().parent().remove();
+                $(".tooltip").tooltip('hide');
+            });
+
+            $(document).on("click",".remove-this-size",function(){
+                $(this).parent().parent().parent().remove();
+                $(".tooltip").tooltip('hide');
+            });
+
+            // Adding options
+            $(document).on("click",".trigger-add-option",function(e){
+                var html_template = $("#new-option-template").html();
+                $("#product-options-list").append($(html_template));
+                setAutocomplete();
+            });
+
+            // Adding categories
+            $(document).on("click",".trigger-add-category",function(e){
+                var html_template = $("#new-category-template").html();
+                $("#product-categories-list").append($(html_template));
+            });
+
+            $(document).on("click",".trigger-add-size",function(e){
+                e.preventDefault();
+                var html_template = $("#new-size-template").html();
+                html_template = html_template.replace(/xxx/g,window.incrementingSizes);
+                $("#product-sizes-list").append($(html_template));
+                setAutocomplete();
+                window.incrementingSizes++;
+            });
+
+            $(document).on('click',".trigger-add-fee",function(e){
+                e.preventDefault();
+                var html_template = $("#new-fee-template").html();
+                html_template = html_template.replace(/xxx/g,window.incrementingFees);
+                $("#product-fees-list").append($(html_template));
+                window.incrementingFees++;
+            });
+
+            $(document).on("click",".add-price-to-this-size",function(e){
+                e.preventDefault();
+                var html_template = $("#new-price-template").html();
+                html_template = html_template.replace(/xxx/g, $(this).attr("data-for"));
+                html_template = html_template.replace(/yyy/g, "-"+window.incrementingPrices);
+                if( $(this).hasClass("is-existing") ){
+                    html_template = html_template.replace(/new/g, "existing");
+                }
+                $(this).parent().parent().parent().find('.size-prices-list').append( $(html_template) );
+                window.incrementingPrices++;
+            });
+
+            setAutocomplete();
+
+        });
+    </script>
+{% endblock %}

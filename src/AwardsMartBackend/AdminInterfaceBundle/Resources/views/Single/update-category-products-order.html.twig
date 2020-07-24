@@ -1,0 +1,140 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+        #edit-product-grid
+        {
+            width:800px;
+        }
+        #edit-product-grid li
+        {
+            list-style-type:none;
+            width:140px;
+            height:140px;
+            cursor: move !important;
+        }
+            #edit-product-grid li .listed-product-image
+            {
+                width:100%;
+                height:100%;
+            }
+        #edit-product-grid li .listed-product-image img
+        {
+            width:100%;
+            height:100%;
+            display:block;
+        }
+        #edit-product-grid li .listed-product-name
+        {
+            font-weight:bold;
+            white-space: nowrap;
+            text-align: center;
+            display:block;
+            width:120px;
+            text-overflow: ellipsis;
+            overflow:hidden;
+        }
+        .packery-drop-placeholder {
+            outline: 3px dashed #444;
+            outline-offset: -6px;
+            /* transition position changing */
+            -webkit-transition: -webkit-transform 0.2s;
+            transition: transform 0.2s;
+        }
+    </style>
+{% endblock %}
+
+{% block main_body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Category Products <small>Re-organize ordering for {{ category.name }} products</small></h3>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="btn-group">
+                <a id="trigger-save-products-order" class="btn btn-info" href="javascript:void(0);">Save New Product Order</a>
+            </div>
+        </div>
+    </div>
+    <br />
+    <hr />
+    <div class="row">
+        <ul id="edit-product-grid">
+            {% for product in products %}
+                <li class="listed-product" data-id="{{ product.id }}">
+                    <div class="listed-product-image"><img src="{{ asset(product.getPrimaryImage()) }}" /></div>
+                    <span class="listed-product-name">{{ product.name }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://unpkg.com/packery@2/dist/packery.pkgd.min.js"></script>
+    <script src="https://unpkg.com/draggabilly@2/dist/draggabilly.pkgd.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(e){
+
+            // Initializes the Grid
+           window.$grid = $('#edit-product-grid').packery({
+                // options
+                itemSelector: '.listed-product',
+                gutter: 50,
+                rowHeight:60
+            });
+
+            // Adds dragging to everything
+            $grid.find('.listed-product').each( function( i, gridItem ) {
+                var draggie = new Draggabilly( gridItem );
+                // bind drag events to Packery
+                $grid.packery( 'bindDraggabillyEvents', draggie );
+            });
+
+            // Serializes the order
+            getCurrentOrder = function()
+            {
+                var items_available = $grid.packery('getItemElements');
+                var order = [];
+                for(var i=0; i<items_available.length; i++)
+                {
+                    var item = $(items_available[i]);
+                    var push = {
+                        product_id:item.attr('data-id'),
+                        order: i
+                    };
+                    order.push(push);
+                }
+                return order;
+            }
+
+            pushCurrentOrder = function()
+            {
+                var push = getCurrentOrder();
+                $.ajax({
+                    type: "GET",
+                    url: "{{ path('categories.products.order.ajax') }}",
+                    data: { order_array: push }
+                }).done(function(d){
+                    if(!d.error){
+                        alert('Order succesfully saved!');
+                    }
+                });
+            }
+
+            $(document).on("click","#trigger-save-products-order",function(){
+                if(confirm('Are you sure you want to save the product order?')){
+                    pushCurrentOrder();
+                }
+            });
+        });
+    </script>
+{% endblock %}

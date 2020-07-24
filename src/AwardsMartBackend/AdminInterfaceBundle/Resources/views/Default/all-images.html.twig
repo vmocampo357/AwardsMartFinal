@@ -1,0 +1,118 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block main_body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Library Images <small>View and use your available site images</small></h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well well-sm">
+                        <div class="btn-group">
+                            <a href="{{ path('create.new.image') }}" class="btn btn-sm btn-info"><i class="fa fa-plus"></i> Add New Library Image</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            {#<div class="row">
+                <form method="get" action="">
+                    <div class="col-md-3">
+                        <label>Filter by text:</label>
+                        <input value="{{ app.request.query.get('text') }}" name="text" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Where grand total is...</label>
+                        <select name="gtelte" class="form-control">
+                            <option value="0">No preference</option>
+                            <option {% if app.request.query.get('gtelte') == -1 %}selected{% endif %} value="-1">Less than..</option>
+                            <option {% if app.request.query.get('gtelte') == 1 %}selected{% endif %} value="1">More than..</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Total (greater or less than)</label>
+                        <input value="{{ app.request.query.get('total') }}" name="total" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>&nbsp;</label><br />
+                        <button type="submit" class="btn btn-success">Filter Orders</button>
+                    </div>
+                </form>
+            </div>
+            <br />#}
+
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table jambo_table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Image ID</th>
+                            <th>Preview</th>
+                            <th>Image Nickname</th>
+                            <th>Source</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for image in images %}
+                            <tr>
+                                <td>{{ image.id }}</td>
+                                <td><a data-featherlight="" target="_blank" href="{{ asset(image.source) }}"><img src="{{ asset(image.source) }}" height="40px" /></a></td>
+                                <td>{{ image.nickname }}</td>
+                                <td>{{ asset(image.source) }}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle btn btn-warning" data-toggle="dropdown">Actions <b class="caret"></b></a>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a class="trigger-remove-image" href="{{ path('deactivate.existing.image', {image_id:image.id}) }}">Remove Image</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% if images|length < 1 %}
+                            <tr>
+                                <td colspan="5">No images were found in the library</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+
+            {#{% if total > 0 %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group">
+                            {% for i in 1..pages %}
+                                {% set class='btn-default' %}
+                                {% if curr == i %}{% set class = 'btn-info' %}{% endif %}
+                                <a href="{{ path('orders.paged.view', {page:i}) }}" class="btn btn-sm {{ class }}">{{ i }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}#}
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".trigger-remove-image").click(function(e){
+                e.preventDefault();
+                if(confirm("Are you sure you want to remove this image?")){
+                    window.location.href = $(this).attr("href");
+                }
+            });
+        });
+    </script>
+{% endblock %}

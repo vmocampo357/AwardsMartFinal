@@ -1,0 +1,63 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block main_body %}
+    {#{{ dump(app.request.request) }}#}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Categories <small>{{ title }}</small></h3>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-default" href="{{ path('categories.all.view') }}">Back to all categories</a>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+    <form action="" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Category Name</h4>
+                <input required value="{{ category.name }}" type="text" class="form-control" name="category[name]" />
+                <hr />
+                <h4>Category Browser Title</h4>
+                <input value="{{ category.metaTitle }}" type="text" class="form-control" name="category[title]" />
+                <hr />
+                <h4>Category Browser Description</h4>
+                <textarea name="category[description]" class="form-control" style="height:200px">{{ category.metaDescription }}</textarea>
+                <hr />
+                <button type="submit" class="btn btn-success">Finish and Update</button>
+            </div>
+            <div class="col-md-6">
+                <h4>Classification</h4>
+                <select class="form-control" name="category[type]">
+                    <option value="1">Product</option>
+                    <option {% if class_id == 2%}selected{% endif %} value="2">Theme</option>
+                </select>
+                <hr />
+                <h4>Parent Category</h4>
+                <select class="form-control" name="category[parent_id]">
+                    <option value="0">No parent (Root Category)</option>
+                    {% for option in category_options %}
+                        {% if option.isActive == 1 %}
+                        <option {% if option.id == parent_id %}selected{% endif %} value="{{ option.id }}">{{ option.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <hr />
+                <h4>Category Thumbnail</h4>
+                <img width="200px" src="{{ asset(category.primaryImage) }}" />
+                <input type="file" name="primary_image" />
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function(e){
+
+        });
+    </script>
+{% endblock %}

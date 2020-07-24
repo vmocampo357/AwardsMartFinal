@@ -1,0 +1,130 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block main_body %}
+    {#{{ dump(app.request.request) }}#}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Addons <small>{{ title }}</small></h3>
+                </div>
+                <div class="col-md-6">
+                    <h3>Addon Options <small>Options for the addon</small></h3>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+    <form action="" method="POST">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4>Addon Name</h4>
+                        <input required name="addon[name]" value="{{ addon.name }}" type="text" class="form-control" />
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4>Addon Label (Used in the dropdowns)</h4>
+                        <input name="addon[label]" value="{{ addon.addonLabel }}" type="text" class="form-control" />
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4>Is active?</h4>
+                        <select name="addon[active]" class="form-control">
+                            <option value="0">No</option>
+                            <option {% if addon.isActive %}selected{% endif %} value="1">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="well-sm">
+                            <button type="submit" class="btn btn-success">Finish and Update Addon</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="javascript:void(0);" class="btn btn-info trigger-new-option"><i class="fa fa-plus-square-o"></i> Add another Option</a>
+                    </div>
+                </div>
+                <hr />
+                {% if addon.options|length > 0 %}
+                    {% for ao in addon.options %}
+                        {% if ao.IsActive == 1 %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Option Name</h4>
+                                <input required name="option[existing][{{ ao.id }}][name]" value="{{ ao.name }}" class="form-control" type="text" />
+                            </div>
+                            <div class="col-md-3">
+                                <h4>Addl. Price</h4>
+                                <input name="option[existing][{{ ao.id }}][price]" value="{{ ao.price }}" class="form-control" type="number" />
+                            </div>
+                            <div class="col-md-1">
+                                <h4>&nbsp;</h4>
+                                <a href="{{ path('deactivate.existing.addon_option',{addon_option_id:ao.id}) }}" class="btn btn-danger deactivate-option"><i class="fa fa-minus-square"></i></a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <div id="new-options">
+                    <div id="new-option-template" class="row insert-after new-option">
+                        <div class="col-md-6">
+                            <h4>Option Name</h4>
+                            <input name="option[new][0][name]" class="form-control" type="text" />
+                        </div>
+                        <div class="col-md-3">
+                            <h4>Addl. Price</h4>
+                            <input name="option[new][0][price]" class="form-control" type="number" />
+                        </div>
+                        <div class="col-md-1">
+                            <h4>&nbsp;</h4>
+                            <a href="javascript:void(0);" class="btn btn-danger remove-inline-option"><i class="fa fa-minus-square"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function(e){
+            window.newCount = 0;
+
+            // Adds a 'new' option to the list of options
+            $(document).on("click",".trigger-new-option",function(){
+                window.newCount++;
+                var template = "<div class=\"row new-option\">" + $("#new-option-template").html() + "</div>";
+                template = template.replace(/\[0\]/g,"["+window.newCount+"]");
+                $("#new-options").append( $(template) );
+            });
+
+            // Deactivates an option
+            $(document).on("click",".deactivate-option",function(e){
+                e.preventDefault();
+                if( confirm("Are you sure you want to de-activate this option? Unsaved work may be lost.") ){
+                    window.location.href = $(this).attr("href");
+                }
+            });
+
+            // Inline removes a new option
+            $(document).on("click",".remove-inline-option",function(e){
+                if($(".new-option").length > 1){
+                    $(this).parent().parent().remove();
+                }
+            });
+        });
+    </script>
+{% endblock %}

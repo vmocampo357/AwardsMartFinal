@@ -1,0 +1,48 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block main_body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>CMS Pages <small>View and review your site's CMS pages</small></h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table jambo_table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Page ID</th>
+                            <th>Page Title</th>
+                            <th>Page (Browser) Title</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for page in pages %}
+                            <tr>
+                                <td>{{ page.id }}</td>
+                                <td>{{ page.title }}</td>
+                                <td>{{ page.metaTitle }}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle btn btn-warning" data-toggle="dropdown">Actions <b class="caret"></b></a>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a href="{{ path('update.existing.page', {page_id:page.id}) }}">Edit</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+{% endblock %}

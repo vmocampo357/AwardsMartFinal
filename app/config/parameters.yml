@@ -1,0 +1,26 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: awardsmart_symfony
+    database_user: root
+    database_password: null
+#    database_port: null
+#    database_name: i2086466_wp2
+#    database_user: i2086466_wp2
+#    database_password: V]1[*p&aQYs~9fdiEq(68(.1
+#    mailer_transport: smtp
+#    mailer_host: smtp.gmail.com
+#    mailer_user: awardsmailer@gmail.com
+#    mailer_password: 456654aaa
+    mailer_transport: sendmail
+    mailer_host: localhost
+    mailer_user: null
+    mailer_password: null
+#    mailer_transport: smtp
+#    mailer_host: smtp.office365.com
+#    mailer_user: sales@awards-mart.com
+#    mailer_password: vUUaF^b3
+    secret: cb25b2f718ab3ba314c19aa7a0da628140a3630f
+    uploads_dir: "%kernel.root_dir%/../public_html/bundles/assets/uploads/new"
+    uploads_web_path: "/bundles/assets/uploads/new"

@@ -1,0 +1,139 @@
+{% extends '@AdminInterface/Default/base-admin.html.twig' %}
+{% block main_body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row x_title">
+                <div class="col-md-6">
+                    <h3>Products <small>View and manage all your products</small></h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well well-sm">
+                        <div class="btn-group">
+                            <a href="{{ path('update.create.product') }}" class="btn btn-sm btn-info"><i class="fa fa-plus"></i> Add New Product</a>
+                            <a href="{{ path('update.create.addon') }}" class="btn btn-sm btn-info"><i class="fa fa-plus"></i> Add New Addon</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <form method="get" action="{{ path('products_all_view') }}">
+                    <div class="col-md-3">
+                        <label>Filter by name:</label>
+                        <input value="{{ app.request.query.get('text') }}" name="text" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Filter by category:</label>
+                        <select name="category" class="form-control">
+                            <option value="">--PRODUCTS--</option>
+                            {% for opt in product_options %}
+                                <option {% if app.request.query.get('category') == opt.id %}selected{% endif %} value="{{ opt.id }}">{{ opt.name }}</option>
+                            {% endfor %}
+                            <option value="">--THEMES--</option>
+                            {% for opt in theme_options %}
+                                <option {% if app.request.query.get('category') == opt.id %}selected{% endif %} value="{{ opt.id }}">{{ opt.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Filter by status:</label>
+                        <select name="active" class="form-control">
+                            <option value="1">Active</option>
+                            <option {% if app.request.query.get('active') == '0' %}selected{% endif %} value="0">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>&nbsp;</label><br />
+                        <button type="submit" class="btn btn-success">Filter Products</button>
+                    </div>
+                </form>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table jambo_table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Product #</th>
+                            <th>Product Name</th>
+                            <th>Product Is Active?</th>
+                            <th>Product Is Featured?</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>{{ product.sku }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>
+                                        <label class="badge badge-info">
+                                            {% if product.IsActive == 1 %}YES{% else %}NO{% endif %}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label class="badge badge-info">N/A</label>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a href="#" class="dropdown-toggle btn btn-warning" data-toggle="dropdown">Actions <b class="caret"></b></a>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <!--<li>
+                                                    <a href="#">View</a>
+                                                </li>!-->
+                                                <li>
+                                                    <a href="{{ path('update.existing.product',{product_id:product.id}) }}">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="trigger-product-delete" href="{{ path('deactivate.existing.product', {product_id:product.id}) }}">Deactivate</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% if total <= 0 %}
+                                <tr><td colspan="5">No matching products found!</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+
+            {% if total > 0 %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-group">
+                        {% for i in 1..pages %}
+                            {% set class='btn-default' %}
+                            {% if curr == i %}{% set class = 'btn-info' %}{% endif %}
+                            <a href="{{ path('products_paged_view', {page:i}) }}?{{ app.request.queryString }}" class="btn btn-sm {{ class }}">{{ i }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <br />
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $(".trigger-product-delete").click(function(e){
+                e.preventDefault();
+               if( confirm("Are you sure you want to deactivate this product?") ){
+                   window.location.href = $(this).attr("href");
+               }
+           });
+        });
+    </script>
+{% endblock %}
